@@ -170,8 +170,10 @@ class ShuffleNet_v2(nn.Module):
                              kernel_size=1,
                              stride=1,
                              padding=0)
+        self.bn = nn.BatchNorm2d(self.stage_out_channels[5])
 
         num_inputs = self.stage_out_channels[-1]
+
         self.fc = nn.Linear(num_inputs, self.num_classes)        
 
         self.init_params()
@@ -225,6 +227,7 @@ class ShuffleNet_v2(nn.Module):
         x = self.stage4(x)
 
         x = self.conv5(x)
+        x = self.bn(x)
         # global average pooling layer
         x = F.avg_pool2d(x, x.data.size()[-2:])
         
